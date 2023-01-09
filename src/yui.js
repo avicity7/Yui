@@ -62,14 +62,8 @@ client.on('ready', () => {
     console.log('Client is ready!');
 });
 
-client.on('message', message => {
-    if (message.body.toLowerCase().startsWith('hey yui')){
-        yuiMain(message);
-    }
-});
- 
 client.on('message_create', message => {
-	if (message.body.toLowerCase().startsWith('hey yui') && message.body.toLowerCase().startsWith('yui here!') == false){
+	if (message.body.toLowerCase().startsWith('hey yui')){
         yuiMain(message);
     }
 });
