@@ -65,7 +65,7 @@ const yuiMain = (message) => {
                 if(command.startsWith('re!') == false){
                     const response = openai.createCompletion({
                         model: "text-curie-001",
-                        prompt: command,
+                        prompt: "Respond to this in a cute, girly way: "+ command,
                         temperature: 0.3,
                         max_tokens: 300,
                         top_p: 1.0,
