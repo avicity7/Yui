@@ -14,6 +14,7 @@ const parseCommand = (message) => {
 const findTimeframe = (message) => { 
     let modifier = "";
     let time = 0;
+    let reply = ""
     for(let i = 0; i<message.length; i++) {
         if (isNaN(message[i]) || message[i] == " ") {
             continue
@@ -24,6 +25,7 @@ const findTimeframe = (message) => {
                 number += message[i+1];
                 i+=1;
             }
+            number = parseInt(number);
             for (let x = i+1; x<message.length;x++) {
                 if (message[x] != " ") {
                     modifier += message[x]
@@ -32,26 +34,49 @@ const findTimeframe = (message) => {
             switch (modifier){
                 case "hours": 
                     time = 1000 * 60 * 60 * (number - 1);
+                    reply = "I'll let everyone know when your presentation is an hour away!"
                     break;
+
+                case "hour": 
+                    time = 1000 * 60 * 45;
+                    reply = "I'll let everyone know when your presentation is 15 minutes away!"
+                    break;
+
                 case "minutes": 
-                    time = 1000 * 60 * (number - 15);
+                    if (time > 15) {
+                        time = 1000 * 60 * (number - 15);
+                        reply = "I'll let everyone know when your presentation is 15 minutes away!"
+                    }
+                    else { 
+                        time = 0; 
+                        reply = "Time to get started preparing for it!"
+                    }
                     break;
+
                 case "minute":
-                    time = 1000 * 60;
+                    time = 0; 
+                    reply = "Time to get started preparing for it!"
                     break;
+
                 case "seconds": 
+                    reply = "Test response!"
                     time = 1000 * number
                     break;
+                    
+                default: 
+                    time = null; 
+                    reply = null; 
+                    break; 
             }
 
         }
 
     }
-    return time 
+    return {time:time,reply:reply} 
 }
 
-const sendReminder = (message) => { 
-    message.reply("Yui here!\n\nYour presentation is close!")
+const sendReminder = (message,reply) => { 
+    message.reply("Yui here!\n\n"+reply)
 }
 const yuiMain = (message) => {
     let command = parseCommand(message.body.toLowerCase()).trim();
@@ -59,7 +84,10 @@ const yuiMain = (message) => {
     if (command.includes("presentation") || command.includes("assignment due")) { 
         if (command.includes("presentation")) {
             message.reply("Yui here!\n\nI'll alert everyone when your presentation is close.");
-            setTimeout(sendReminder,findTimeframe(command),message);
+            const {time,reply} = findTimeframe(command);
+            if (time != null && reply != null) {
+                setTimeout(sendReminder,time,message,reply);
+            }
         }
         else {
             message.reply("Yui here!\n\nI'll alert everyone when your presentation due date is close.")
