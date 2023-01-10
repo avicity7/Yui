@@ -28,10 +28,13 @@ const findTimeframe = (message) => {
             switch (modifier){
                 case "hours": 
                     time = 1000 * 60 * 60 * number - 1 
+                    break;
                 case "minutes": 
                     time = 1000 * 60 * number - 15 
+                    break;
                 case "seconds": 
                     time = 1000 * number
+                    break;
             }
 
         }
