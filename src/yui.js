@@ -43,7 +43,7 @@ const findTimeframe = (message) => {
                     break;
 
                 case "minutes": 
-                    if (time > 15) {
+                    if (number > 15) {
                         time = 1000 * 60 * (number - 15);
                         reply = "I'll let everyone know when your presentation is 15 minutes away!"
                     }
