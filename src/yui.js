@@ -67,7 +67,7 @@ const yuiMain = (message) => {
                         model: "text-curie-001",
                         prompt: command,
                         temperature: 0.1,
-                        max_tokens: 300,
+                        max_tokens: 60,
                         top_p: 1.0,
                         frequency_penalty: 0.0,
                         presence_penalty: 0.0,
