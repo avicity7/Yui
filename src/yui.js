@@ -64,7 +64,7 @@ const yuiMain = (message) => {
             default:
                 if(command.startsWith('re!') == false){
                     const response = openai.createCompletion({
-                        model: "text-davinci-003",
+                        model: "text-curie-001",
                         prompt: command,
                         temperature: 0.3,
                         max_tokens: 300,
