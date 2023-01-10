@@ -20,6 +20,10 @@ const findTimeframe = (message) => {
         }
         else{ 
             let number = message[i]; 
+            if (message[i+1] != " ") {
+                number += message[i+1];
+                i+=1;
+            }
             for (let x = i+1; x<message.length;x++) {
                 if (message[x] != " ") {
                     modifier += message[x]
