@@ -34,18 +34,18 @@ const findTimeframe = (message) => {
             switch (modifier){
                 case "hours": 
                     time = 1000 * 60 * 60 * (number - 1);
-                    reply = "I'll let everyone know when your presentation is an hour away!"
+                    reply = ["I'll let everyone know when your presentation is an hour away!","Your presentation is an hour away!"]
                     break;
 
                 case "hour": 
                     time = 1000 * 60 * 45;
-                    reply = "I'll let everyone know when your presentation is 15 minutes away!"
+                    reply = ["I'll let everyone know when your presentation is 15 minutes away!","Your presentation is 15 minutes away!"]
                     break;
 
                 case "minutes": 
                     if (number > 15) {
                         time = 1000 * 60 * (number - 15);
-                        reply = "I'll let everyone know when your presentation is 15 minutes away!"
+                        reply = ["I'll let everyone know when your presentation is 15 minutes away!","Your presentation is 15 minutes away!"]
                     }
                     else { 
                         time = 0; 
@@ -83,7 +83,6 @@ const yuiMain = (message) => {
     console.log(command);
     if (command.includes("presentation") || command.includes("assignment due")) { 
         if (command.includes("presentation")) {
-            message.reply("Yui here!\n\nI'll alert everyone when your presentation is close.");
             const {time,reply} = findTimeframe(command);
             if (time != null && reply != null) {
                 setTimeout(sendReminder,time,message,reply);
@@ -105,7 +104,7 @@ const yuiMain = (message) => {
                         model: "text-davinci-003",
                         prompt: command,
                         temperature: 0.1,
-                        max_tokens: 60,
+                        max_tokens: 150,
                         top_p: 1.0,
                         frequency_penalty: 0.0,
                         presence_penalty: 0.0,
