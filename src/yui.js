@@ -1,5 +1,6 @@
 const qrcode = require('qrcode-terminal');
 const openai = require('./openA1');
+const {addPreviousID, readPreviousIDList} = require('./readWrite');
 
 const { Client,LocalAuth } = require('whatsapp-web.js');
 
@@ -103,6 +104,7 @@ const yuiMain = (message) => {
                     const response = openai.createCompletion({
                         model: "text-davinci-003",
                         prompt: command,
+                        previous_id: readPreviousIDList(),
                         temperature: 0.1,
                         max_tokens: 150,
                         top_p: 1.0,
@@ -112,6 +114,7 @@ const yuiMain = (message) => {
                     
                     response.then((result) => {
                         message.reply("Yui here! "+ result.data.choices[0].text);
+                        console.log(result.data)
                     })
                 }
                 break;
