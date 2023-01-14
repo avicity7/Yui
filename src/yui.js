@@ -104,7 +104,6 @@ const yuiMain = (message) => {
                     const response = openai.createCompletion({
                         model: "text-davinci-003",
                         prompt: command,
-                        previous_id: readPreviousIDList(),
                         temperature: 0.1,
                         max_tokens: 150,
                         top_p: 1.0,
