@@ -1,5 +1,6 @@
 const qrcode = require('qrcode-terminal');
 const openai = require('./openA1');
+const {addPreviousID, readPreviousIDList} = require('./readWrite');
 
 const { Client,LocalAuth } = require('whatsapp-web.js');
 
@@ -34,18 +35,18 @@ const findTimeframe = (message) => {
             switch (modifier){
                 case "hours": 
                     time = 1000 * 60 * 60 * (number - 1);
-                    reply = "I'll let everyone know when your presentation is an hour away!"
+                    reply = ["I'll let everyone know when your presentation is an hour away!","Your presentation is an hour away!"]
                     break;
 
                 case "hour": 
                     time = 1000 * 60 * 45;
-                    reply = "I'll let everyone know when your presentation is 15 minutes away!"
+                    reply = ["I'll let everyone know when your presentation is 15 minutes away!","Your presentation is 15 minutes away!"]
                     break;
 
                 case "minutes": 
                     if (number > 15) {
                         time = 1000 * 60 * (number - 15);
-                        reply = "I'll let everyone know when your presentation is 15 minutes away!"
+                        reply = ["I'll let everyone know when your presentation is 15 minutes away!","Your presentation is 15 minutes away!"]
                     }
                     else { 
                         time = 0; 
@@ -104,8 +105,9 @@ const yuiMain = (message) => {
                     const response = openai.createCompletion({
                         model: "text-davinci-003",
                         prompt: command,
+                        previous_id: "cmpl-6YOthcqqJTZC1yJ05yMETgZq5JP09",
                         temperature: 0.1,
-                        max_tokens: 60,
+                        max_tokens: 150,
                         top_p: 1.0,
                         frequency_penalty: 0.0,
                         presence_penalty: 0.0,
@@ -113,6 +115,7 @@ const yuiMain = (message) => {
                     
                     response.then((result) => {
                         message.reply("Yui here! "+ result.data.choices[0].text);
+                        addPreviousID(result.data.id)
                     })
                 }
                 break;
