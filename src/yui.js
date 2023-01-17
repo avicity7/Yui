@@ -83,10 +83,10 @@ const yuiMain = (message) => {
     console.log(command);
     if (command.includes("presentation") || command.includes("assignment due")) { 
         if (command.includes("presentation")) {
-            message.reply("Yui here!\n\nI'll alert everyone when your presentation is close.");
             const {time,reply} = findTimeframe(command);
+            message.reply("Yui here!\n\n"+reply);
             if (time != null && reply != null) {
-                setTimeout(sendReminder,time,message,reply);
+                setTimeout(sendReminder,time,message,"Your presentation ");
             }
         }
         else {
