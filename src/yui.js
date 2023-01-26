@@ -135,7 +135,7 @@ client.on('ready', () => {
 });
 
 client.on('message_create', message => {
-	if (message.body.toLowerCase().startsWith('hey yui') || message.body.toLowerCase().startsWith('ねえゆい') || message.body.toLowerCase('ねゆい')){
+	if (message.body.toLowerCase().startsWith('hey yui')){
         yuiMain(message);
     }
 });
