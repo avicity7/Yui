@@ -105,8 +105,8 @@ const yuiMain = (message) => {
                     const response = openai.createCompletion({
                         model: "text-davinci-003",
                         prompt: command,
-                        temperature: 0.1,
-                        max_tokens: 150,
+                        temperature: 0.3,
+                        max_tokens: 300,
                         top_p: 1.0,
                         frequency_penalty: 0.0,
                         presence_penalty: 0.0,
@@ -135,7 +135,7 @@ client.on('ready', () => {
 });
 
 client.on('message_create', message => {
-	if (message.body.toLowerCase().startsWith('hey yui')){
+	if (message.body.toLowerCase().startsWith('hey yui') || message.body.toLowerCase().startsWith('ねえゆい') || message.body.toLowerCase('ねゆい')){
         yuiMain(message);
     }
 });
