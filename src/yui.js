@@ -35,7 +35,8 @@ const yuiMain = (message) => {
                     try {
                         eval(result.data.choices[0].text);
                     }
-                    catch { 
+                    catch(err) { 
+                        console.log(err);
                         message.reply("Yui here!\n\nI wasn't able to process that, try rewording it!")
                     }
                 })
