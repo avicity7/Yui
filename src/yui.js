@@ -12,73 +12,10 @@ const parseCommand = (message) => {
     return output
 }
 
-const findTimeframe = (message) => { 
-    let modifier = "";
-    let time = 0;
-    let reply = ""
-    for(let i = 0; i<message.length; i++) {
-        if (isNaN(message[i]) || message[i] == " ") {
-            continue
-        }
-        else{ 
-            let number = message[i]; 
-            if (message[i+1] != " ") {
-                number += message[i+1];
-                i+=1;
-            }
-            number = parseInt(number);
-            for (let x = i+1; x<message.length;x++) {
-                if (message[x] != " ") {
-                    modifier += message[x]
-                }
-            }
-            switch (modifier){
-                case "hours": 
-                    time = 1000 * 60 * 60 * (number - 1);
-                    reply = ["I'll let everyone know when your presentation is an hour away!","Your presentation is an hour away!"]
-                    break;
-
-                case "hour": 
-                    time = 1000 * 60 * 45;
-                    reply = ["I'll let everyone know when your presentation is 15 minutes away!","Your presentation is 15 minutes away!"]
-                    break;
-
-                case "minutes": 
-                    if (number > 15) {
-                        time = 1000 * 60 * (number - 15);
-                        reply = ["I'll let everyone know when your presentation is 15 minutes away!","Your presentation is 15 minutes away!"]
-                    }
-                    else { 
-                        time = 0; 
-                        reply = "Time to get started preparing for it!"
-                    }
-                    break;
-
-                case "minute":
-                    time = 0; 
-                    reply = "Time to get started preparing for it!"
-                    break;
-
-                case "seconds": 
-                    reply = "Test response!"
-                    time = 1000 * number
-                    break;
-                    
-                default: 
-                    time = null; 
-                    reply = null; 
-                    break; 
-            }
-
-        }
-
-    }
-    return {time:time,reply:reply} 
-}
-
 const sendReminder = (message,reply) => { 
     message.reply("Yui here!\n\n"+reply)
 }
+
 const yuiMain = (message) => {
     let command = parseCommand(message.body.toLowerCase()).trim();
     console.log(command);
@@ -103,7 +40,7 @@ const yuiMain = (message) => {
                 if(command.startsWith('re!') == false){
                     const response = openai.createCompletion({
                         model: "text-davinci-003",
-                        prompt: command,
+                        prompt: "Using JavaScript and message.reply(), respond to the prompt or answer the question provided in plaintext and no explanation: "+command,
                         previous_id: "cmpl-6YOthcqqJTZC1yJ05yMETgZq5JP09",
                         temperature: 0.1,
                         max_tokens: 150,
@@ -113,8 +50,7 @@ const yuiMain = (message) => {
                     });
                     
                     response.then((result) => {
-                        message.reply("Yui here! "+ result.data.choices[0].text);
-                        addPreviousID(result.data.id)
+                        eval(result.data.choices[0].text);
                     })
                 }
                 break;
