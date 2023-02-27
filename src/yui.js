@@ -23,7 +23,7 @@ const yuiMain = (message) => {
             if(command.startsWith('re!') == false){
                 const response = openai.createCompletion({
                     model: "text-davinci-003",
-                    prompt: "Using JavaScript and message.reply(), respond to the prompt or answer the question provided in plaintext and no explanation: "+command,
+                    prompt: "Using JavaScript and message.reply(), respond to the prompt or answer the question provided in plaintext and no explanation, also starting with 'Yui here!\n\n' in the message: "+command,
                     temperature: 0.3,
                     max_tokens: 300,
                     top_p: 1.0,
@@ -32,7 +32,12 @@ const yuiMain = (message) => {
                 });
                 
                 response.then((result) => {
-                    eval(result.data.choices[0].text);
+                    try {
+                        eval(result.data.choices[0].text);
+                    }
+                    catch { 
+                        message.reply("Yui here!\n\nI wasn't able to process that, try rewording it!")
+                    }
                 })
             }
             break;
