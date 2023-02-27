@@ -33,6 +33,7 @@ const yuiMain = (message) => {
                 
                 response.then((result) => {
                     try {
+                        console.log(result.data.choices[0].text)
                         eval(result.data.choices[0].text);
                     }
                     catch(err) { 
