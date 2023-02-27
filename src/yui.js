@@ -23,7 +23,7 @@ const yuiMain = (message) => {
             if(command.startsWith('re!') == false){
                 const response = openai.createCompletion({
                     model: "text-davinci-003",
-                    prompt: "Using JavaScript and message.reply(), respond to the prompt or answer the question provided in plaintext and no explanation, also starting with 'Yui here!\n\n' in the message: "+command,
+                    prompt: "Using JavaScript and message.reply(), respond to the prompt or answer the question provided in plaintext and no explanation: "+command,
                     temperature: 0.3,
                     max_tokens: 300,
                     top_p: 1.0,
