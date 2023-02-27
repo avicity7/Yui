@@ -22,8 +22,9 @@ const yuiMain = (message) => {
     if (command.includes("presentation") || command.includes("assignment due")) { 
         if (command.includes("presentation")) {
             const {time,reply} = findTimeframe(command);
+            message.reply("Yui here!\n\n"+reply);
             if (time != null && reply != null) {
-                setTimeout(sendReminder,time,message,reply);
+                setTimeout(sendReminder,time,message,"Your presentation ");
             }
         }
         else {
@@ -42,8 +43,8 @@ const yuiMain = (message) => {
                         model: "text-davinci-003",
                         prompt: "Using JavaScript and message.reply(), respond to the prompt or answer the question provided in plaintext and no explanation: "+command,
                         previous_id: "cmpl-6YOthcqqJTZC1yJ05yMETgZq5JP09",
-                        temperature: 0.1,
-                        max_tokens: 150,
+                        temperature: 0.3,
+                        max_tokens: 300,
                         top_p: 1.0,
                         frequency_penalty: 0.0,
                         presence_penalty: 0.0,
