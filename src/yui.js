@@ -24,7 +24,6 @@ const yuiMain = (message) => {
                 const response = openai.createCompletion({
                     model: "text-davinci-003",
                     prompt: "Using JavaScript and message.reply(), respond to the prompt or answer the question provided in plaintext and no explanation: "+command,
-                    previous_id: "cmpl-6YOthcqqJTZC1yJ05yMETgZq5JP09",
                     temperature: 0.3,
                     max_tokens: 300,
                     top_p: 1.0,
