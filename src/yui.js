@@ -29,7 +29,7 @@ const removeMentionsFromBody = (body) => {
                 mention = true
             }
             else {
-                output += mention[i]
+                output += body[i]
             }
         }
         else { 
