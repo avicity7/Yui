@@ -47,7 +47,7 @@ const yuiMain = (message) => {
     let author = parseAuthor(message.from)
     console.log(author + ": " + command)
     console.log(message)
-    if (message._data.quotedParticipant == '12564848434@c.us' || message.mentionedIds.includes('12564848434@c.us') || message._data.inviteGroupType == undefined) {
+    if (message._data.quotedParticipant == '12564848434@c.us' || message.mentionedIds.includes('12564848434@c.us') || message.id.participant == undefined) {
         messages.push({"role":"user","name":author,"content":command})
         try {
             const response = openai.createChatCompletion({
