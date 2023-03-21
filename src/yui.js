@@ -46,6 +46,7 @@ const yuiMain = (message) => {
     let command = removeMentionsFromBody(message.body.toLowerCase().trim());
     let author = parseAuthor(message.from)
     console.log(author + ": " + command)
+    console.log(message)
     if (message._data.quotedParticipant == '12564848434@c.us' || message.mentionedIds.includes('12564848434@c.us') || message._data.inviteGroupType == undefined) {
         messages.push({"role":"user","name":author,"content":command})
         try {
