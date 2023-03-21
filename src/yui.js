@@ -35,28 +35,32 @@ const yuiMain = (message) => {
     console.log(author + ": " + command)
 
     messages.push({"role":"user","name":author,"content":command})
+    try {
+        const response = openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: messages,
+            temperature: 1,
+            max_tokens: 500,
+            top_p: 1.0,
+            frequency_penalty: 0.0,
+            presence_penalty: 0.0,
+        });
+        
+        response.then((result) => {
+            try {
+                message.reply(result.data.choices[0].message.content)
+                messages.push({"role":"assistant","content":result.data.choices[0].message.content})
+                fs.writeFileSync("messages.json",JSON.stringify({messages:messages}))
+            }
+            catch(err) { 
+                console.log(err);
+                message.reply("Yui here!\n\nI wasn't able to process that, try rewording it!")
+            }
+        })
+    } catch {
+        message.reply("Sorry, can you repeat yourself?")
+    }
 
-    const response = openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: messages,
-        temperature: 0.8,
-        max_tokens: 1000,
-        top_p: 1.0,
-        frequency_penalty: 0.0,
-        presence_penalty: 0.0,
-    });
-    
-    response.then((result) => {
-        try {
-            message.reply(result.data.choices[0].message.content)
-            messages.push({"role":"assistant","content":result.data.choices[0].message.content})
-            fs.writeFileSync("messages.json",JSON.stringify({messages:messages}))
-        }
-        catch(err) { 
-            console.log(err);
-            message.reply("Yui here!\n\nI wasn't able to process that, try rewording it!")
-        }
-    })
 }
 
 const client = new Client({
