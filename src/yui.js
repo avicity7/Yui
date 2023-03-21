@@ -54,7 +54,7 @@ const yuiMain = (message) => {
                 messages: messages,
                 temperature: 1,
                 max_tokens: 500,
-                top_p: 1.0,
+                top_p: 0.3,
                 frequency_penalty: 0.0,
                 presence_penalty: 0.0,
             });
