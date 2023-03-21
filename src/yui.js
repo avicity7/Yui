@@ -1,7 +1,11 @@
+//messages.json added to gitignore for privacy purposes, refer to https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb for input layout.
 const qrcode = require('qrcode-terminal');
 const openai = require('./openA1');
+let fs = require('fs');
 
 const { Client,LocalAuth } = require('whatsapp-web.js');
+
+var messages = JSON.parse(fs.readFileSync("messages.json")).messages
 
 const parseCommand = (message) => { 
     let output = "";
@@ -11,39 +15,48 @@ const parseCommand = (message) => {
     return output
 }
 
-const yuiMain = (message) => {
-    let command = parseCommand(message.body.toLowerCase()).trim();
-    console.log(command);
-    switch(command) { 
-        case 'introduce yourself':
-            message.reply("Yui here!\n\nI'm Karl's AI Assistant. Ask me a question or give me tasks! I listen to all messages starting with 'hey yui'.");
-            break;
-
-        default:
-            if(command.startsWith('re!') == false){
-                const response = openai.createCompletion({
-                    model: "text-davinci-003",
-                    prompt: "Using JavaScript and message.reply(), respond to the prompt or answer the question provided in plaintext and no explanation: "+command,
-                    temperature: 0.3,
-                    max_tokens: 300,
-                    top_p: 1.0,
-                    frequency_penalty: 0.0,
-                    presence_penalty: 0.0,
-                });
-                
-                response.then((result) => {
-                    try {
-                        console.log(result.data.choices[0].text)
-                        eval(result.data.choices[0].text);
-                    }
-                    catch(err) { 
-                        console.log(err);
-                        message.reply("Yui here!\n\nI wasn't able to process that, try rewording it!")
-                    }
-                })
-            }
-            break;
+const parseAuthor = (username) => {
+    let author = ""
+    for (let i = 0; i < username.length; i++) { 
+        if (username[i] !== '@') {
+            author += username[i]
         }
+        else { 
+            break
+        }
+    }
+    return author
+}
+
+const yuiMain = (message) => {
+    console.log(message)
+    let command = message.body.toLowerCase().trim();
+    let author = parseAuthor(message.from)
+    console.log(author + ": " + command)
+
+    messages.push({"role":"user","name":author,"content":command})
+
+    const response = openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: messages,
+        temperature: 0.8,
+        max_tokens: 1000,
+        top_p: 1.0,
+        frequency_penalty: 0.0,
+        presence_penalty: 0.0,
+    });
+    
+    response.then((result) => {
+        try {
+            message.reply(result.data.choices[0].message.content)
+            messages.push({"role":"assistant","content":result.data.choices[0].message.content})
+            fs.writeFileSync("messages.json",JSON.stringify({messages:messages}))
+        }
+        catch(err) { 
+            console.log(err);
+            message.reply("Yui here!\n\nI wasn't able to process that, try rewording it!")
+        }
+    })
 }
 
 const client = new Client({
@@ -58,10 +71,8 @@ client.on('ready', () => {
     console.log('Client is ready!');
 });
 
-client.on('message_create', message => {
-	if (message.body.toLowerCase().startsWith('hey yui')){
-        yuiMain(message);
-    }
+client.on('message', message => {
+	yuiMain(message)
 });
 
 client.initialize();
