@@ -1,6 +1,7 @@
 //messages.json added to gitignore for privacy purposes, refer to https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb for input layout.
 const qrcode = require('qrcode-terminal');
 const openai = require('./openA1');
+const dotenv = require("dotenv").config();
 let fs = require('fs');
 
 const { Client,LocalAuth } = require('whatsapp-web.js');
@@ -58,7 +59,10 @@ const yuiMain = (message) => {
                 frequency_penalty: 0.0,
                 presence_penalty: 0.0,
             });
-            
+            response.catch((error) => {
+                console.log(error)
+                fs.writeFileSync("messages.json",JSON.stringify({"messages":[{"role":"system","content":process.env.RESET_MESSAGE}]}))
+            })
             response.then((result) => {
                 try {
                     message.reply(result.data.choices[0].message.content)
