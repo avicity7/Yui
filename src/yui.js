@@ -5,6 +5,8 @@ let fs = require('fs');
 
 const { Client,LocalAuth } = require('whatsapp-web.js');
 
+var messages = JSON.parse(fs.readFileSync("messages.json")).messages
+
 const parseAuthor = (username) => {
     let author = ""
     for (let i = 0; i < username.length; i++) { 
@@ -44,8 +46,7 @@ const yuiMain = (message) => {
     let command = removeMentionsFromBody(message.body.toLowerCase().trim());
     let author = parseAuthor(message.from)
     console.log(author + ": " + command)
-    if (messages.to == '12564848434@c.us' || messages.mentionedIds.includes('12564848434@c.us')) {
-        let messages = JSON.parse(fs.readFileSync("messages.json")).messages
+    if (message.to == '12564848434@c.us' || message.mentionedIds.includes('12564848434@c.us')) {
         messages.push({"role":"user","name":author,"content":command})
         try {
             const response = openai.createChatCompletion({
