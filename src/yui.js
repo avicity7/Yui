@@ -43,7 +43,6 @@ const removeMentionsFromBody = (body) => {
 }
 
 const yuiMain = (message) => {
-    console.log(message)
     let command = removeMentionsFromBody(message.body.toLowerCase().trim());
     let author = parseAuthor(message.from)
     console.log(author + ": " + command)
@@ -59,11 +58,11 @@ const yuiMain = (message) => {
                 frequency_penalty: 0.0,
                 presence_penalty: 0.0,
             });
-            response.catch((error) => {
-                console.log(error)
-                fs.writeFileSync("messages.json",JSON.stringify({"messages":[{"role":"system","content":process.env.RESET_MESSAGE}]}))
-            })
-            response.then((result) => {
+            response.then((result, error) => {
+                if (error) {
+                    console.log(error)
+                    fs.writeFileSync("messages.json",JSON.stringify({"messages":[{"role":"system","content":process.env.RESET_MESSAGE}]}))
+                }
                 try {
                     message.reply(result.data.choices[0].message.content)
                     messages.push({"role":"assistant","content":result.data.choices[0].message.content})
