@@ -46,7 +46,7 @@ const yuiMain = (message) => {
     let command = removeMentionsFromBody(message.body.toLowerCase().trim());
     let author = parseAuthor(message.from)
     console.log(author + ": " + command)
-    if (message.to == '12564848434@c.us' || message.mentionedIds.includes('12564848434@c.us')) {
+    if (message.mentionedIds.includes('12564848434@c.us')) {
         messages.push({"role":"user","name":author,"content":command})
         try {
             const response = openai.createChatCompletion({
