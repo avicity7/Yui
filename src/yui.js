@@ -7,14 +7,6 @@ const { Client,LocalAuth } = require('whatsapp-web.js');
 
 var messages = JSON.parse(fs.readFileSync("messages.json")).messages
 
-const parseCommand = (message) => { 
-    let output = "";
-    for (let i = 7;i<message.length;i++) {
-        output += message[i]
-    }
-    return output
-}
-
 const parseAuthor = (username) => {
     let author = ""
     for (let i = 0; i < username.length; i++) { 
@@ -28,9 +20,29 @@ const parseAuthor = (username) => {
     return author
 }
 
+const removeMentionsFromBody = (body) => {
+    let mention = false; 
+    let output = ""
+    for (let i = 0; i < body.length; i++) {
+        if (mention === false) {
+            if (body[i] == "@") {
+                mention = true
+            }
+            else {
+                output += mention[i]
+            }
+        }
+        else { 
+            if (body[i] == " ") {
+                mention = false
+            }
+        }
+    }
+}
+
 const yuiMain = (message) => {
     console.log(message)
-    let command = message.body.toLowerCase().trim();
+    let command = removeMentionsFromBody(message.body.toLowerCase().trim());
     let author = parseAuthor(message.from)
     console.log(author + ": " + command)
 
