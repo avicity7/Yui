@@ -6,6 +6,7 @@ let fs = require('fs');
 const { Client,LocalAuth } = require('whatsapp-web.js');
 
 var messages = JSON.parse(fs.readFileSync("messages.json")).messages
+var numberId = "";
 
 const parseAuthor = (username) => {
     let author = ""
@@ -87,6 +88,11 @@ client.on('qr', qr => {
 client.on('ready', () => {
     console.log('Client is ready!');
 });
+
+client.getNumberId((id) => {
+    numberId = id
+    console.log(numberId)
+})
 
 client.on('message', message => {
 	yuiMain(message)
