@@ -38,6 +38,7 @@ const removeMentionsFromBody = (body) => {
             }
         }
     }
+    return output
 }
 
 const yuiMain = (message) => {
