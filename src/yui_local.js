@@ -1,9 +1,7 @@
 //messages.json added to gitignore for privacy purposes, refer to https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb for input layout.
-const qrcode = require('qrcode-terminal');
 const openai = require('./openA1');
+const prompt = require('prompt-sync')();
 let fs = require('fs');
-
-const { Client,LocalAuth } = require('whatsapp-web.js');
 
 var messages = JSON.parse(fs.readFileSync("messages.json")).messages
 
@@ -41,18 +39,13 @@ const removeMentionsFromBody = (body) => {
 }
 
 const yuiMain = (message) => {
-    console.log(message)
-    let command = removeMentionsFromBody(message.body.toLowerCase().trim());
-    let author = parseAuthor(message.from)
-    console.log(author + ": " + command)
-
-    messages.push({"role":"user","name":author,"content":command})
+    messages.push({"role":"user","content":message})
     try {
         const response = openai.createChatCompletion({
             model: "gpt-4",
             messages: messages,
             temperature: 1,
-            max_tokens: 8000,
+            max_tokens: 500,
             top_p: 1.0,
             frequency_penalty: 0.0,
             presence_penalty: 0.0,
@@ -60,7 +53,7 @@ const yuiMain = (message) => {
         
         response.then((result) => {
             try {
-                message.reply(result.data.choices[0].message.content)
+                console.log(result.data.choices[0].message.content)
                 messages.push({"role":"assistant","content":result.data.choices[0].message.content})
                 fs.writeFileSync("messages.json",JSON.stringify({messages:messages}))
             }
@@ -75,20 +68,5 @@ const yuiMain = (message) => {
 
 }
 
-const client = new Client({
-    authStrategy: new LocalAuth()
-});
-
-client.on('qr', qr => {
-    qrcode.generate(qr, {small: true});
-});
-
-client.on('ready', () => {
-    console.log('Client is ready!');
-});
-
-client.on('message', message => {
-	yuiMain(message)
-});
-
-client.initialize();
+const question = prompt('Enter prompt: ')
+yuiMain(question)
