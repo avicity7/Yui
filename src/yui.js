@@ -1,6 +1,7 @@
 //messages.json added to gitignore for privacy purposes, refer to https://github.com/openai/openai-cookbook/blob/main/examples/How_to_format_inputs_to_ChatGPT_models.ipynb for input layout.
 const qrcode = require('qrcode-terminal');
 const openai = require('./openA1');
+const dotenv = require("dotenv").config();
 let fs = require('fs');
 
 const { Client,LocalAuth } = require('whatsapp-web.js');
@@ -29,7 +30,7 @@ const removeMentionsFromBody = (body) => {
                 mention = true
             }
             else {
-                output += mention[i]
+                output += body[i]
             }
         }
         else { 
@@ -38,10 +39,10 @@ const removeMentionsFromBody = (body) => {
             }
         }
     }
+    return output
 }
 
 const yuiMain = (message) => {
-    console.log(message)
     let command = removeMentionsFromBody(message.body.toLowerCase().trim());
     let author = parseAuthor(message.from)
     console.log(author + ": " + command)
